@@ -32,7 +32,7 @@ class BaiduTTS(object):
         url = 'https://openapi.baidu.com/oauth/2.0/token'
         key = 'access_token'
         res = self.cache.get(key)
-        if res and res['expire_time'] < time.time():
+        if res and res['expire_time'] > time.time():
             return res['data']
         resp = requests.get(
             url,
