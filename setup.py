@@ -3,8 +3,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='baidu_tts',
-    version='0.0.2',
-    keywords=('TTS', 'yuyin', 'Baidu'),
+    version='0.0.3',
+    keywords=('TTS', 'sound', 'Baidu'),
     description='A Python lib of Baidu TTS.',
     url='http://github.com/yetone/baidu_tts',
     license='MIT License',

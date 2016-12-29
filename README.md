@@ -17,6 +17,13 @@ sound_buffer = tts.say('你好')  # get sound buffer
 
 sound_buffer.write('/tmp/hello.mp3')  # save to file
 content = sound_buffer.read()  # get binary content
+
+stream = sound_buffer.stream  # get binary stream
+
+# iter content
+for chunk in sound_buffer.iter_content(chunk_size=1024):
+    if chunk:
+        ...
 ```
 
 ## License

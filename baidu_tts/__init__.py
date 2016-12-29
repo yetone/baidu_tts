@@ -8,17 +8,30 @@ import requests
 
 
 class Buffer(object):
-    def __init__(self, content, content_type, content_length):
-        self.content = content
-        self.content_type = content_type
-        self.content_length = content_length
+    def __init__(self, resp):
+        self.resp = resp
+        self.content_type = resp.headers['content-type']
+        self.content_length = int(resp.headers['content-length'])
+
+    @property
+    def content(self):
+        return self.resp.content
+
+    @property
+    def stream(self):
+        return self.resp.raw
+
+    def iter_content(self, chunk_size):
+        return self.resp.iter_content(chunk_size=chunk_size)
 
     def read(self):
         return self.content
 
-    def write(self, fp):
+    def write(self, fp, chunk_size=1024):
         with open(fp, 'wb') as f:
-            f.write(self.read())
+            for chunk in self.iter_content(chunk_size):
+                if chunk:
+                    f.write(chunk)
 
 
 class BaiduTTS(object):
@@ -62,15 +75,8 @@ class BaiduTTS(object):
             'tok': access_token,
             'ctp': 1,
             'cuid': uuid4().hex
-        })
+        }, stream=True)
 
-        try:
-            resp.json()
-            return
-        except ValueError:
-            if raw:
-                return resp
-            return Buffer(
-                resp.content, resp.headers['content-type'],
-                int(resp.headers['content-length'])
-            )
+        if raw:
+            return resp
+        return Buffer(resp)
